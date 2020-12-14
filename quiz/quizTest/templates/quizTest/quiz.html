@@ -1,0 +1,356 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+
+        <!--Styling for the quiz questions-->
+        <link rel='stylesheet' href='{% static "quizTest/style_questions.css" %}'>
+
+        <!-- Styling for the quiz navigation-->
+        <link rel='stylesheet' href='{% static "quizTest/quiz_nav.css" %}'>
+
+        <!--JavaScript to make navigation more responsible-->
+        <script src='{% static "quizTest/quiz_nav.js" %}'></script>
+        
+        <title>Quiz Time</title>
+        <script>
+            
+            document.addEventListener('DOMContentLoaded', () => {
+
+                history.pushState(null, null, location.href);
+                    window.onpopstate = function () {
+                        history.go(1);
+                    };
+               
+               // Get all Questions from the question Set 
+               
+               questions = eval('{{ questionSet | escapejs }}')
+           
+               //if a querySet exists
+               if(questions){
+           
+                   //For each question
+                   
+                   for(i=0; i < questions.length; i++){
+                       //Create all the divs housing the question as well as the class for styling
+                       //and special attributes to target things like the answer
+           
+                    //First create a housing divs
+                    questionHouse = document.createElement('div');
+                    questionHouse.classList.add('questionHouse');
+                    optionHouse = document.createElement('div');
+                    optionHouse.classList.add('optionHouse');
+           
+                    //Then the normal divs
+                       questionDiv = document.createElement('div');
+                       questionDiv.classList.add('questionDiv');
+                       questionDiv.setAttribute('data-question', `${i}` )
+           
+                       optionADiv = document.createElement('div');
+                       optionADiv.classList.add('optionDiv');
+                       optionADiv.setAttribute('data-question', `${i}`)
+                       optionADiv.setAttribute('data-option', 'A')
+                       
+           
+                       optionBDiv = document.createElement('div');
+                       optionBDiv.classList.add('optionDiv');
+                       optionBDiv.setAttribute('data-question', `${i}`)
+                       optionBDiv.setAttribute('data-option', 'B')
+           
+                       optionCDiv = document.createElement('div');
+                       optionCDiv.classList.add('optionDiv');
+                       optionCDiv.setAttribute('data-question', `${i}`)
+                       optionCDiv.setAttribute('data-option', 'C') 
+           
+                       optionDDiv = document.createElement('div');
+                       optionDDiv.classList.add('optionDiv');
+                       optionDDiv.setAttribute('data-question', `${i}`)
+                       optionDDiv.setAttribute('data-option', 'D')
+           
+           
+                       //Populate the divs with the question details 
+                       num = i+1
+           
+                       questionDiv.innerHTML = `<span class='question_no'>Q.${num}</span> <br> <br>${questions[i].question}`
+           
+                       optionADiv.innerHTML = `<span class='option_style'>${optionADiv.getAttribute('data-option')}</span>  <span>${questions[i].A}</span>`
+                       optionBDiv.innerHTML = `<span class='option_style'>${optionBDiv.getAttribute('data-option')}</span>  <span>${questions[i].B}</span>`
+                       optionCDiv.innerHTML = `<span class='option_style'>${optionCDiv.getAttribute('data-option')}</span>  <span>${questions[i].C}</span>`
+                       optionDDiv.innerHTML = `<span class='option_style'>${optionDDiv.getAttribute('data-option')}</span>  <span>${questions[i].D}</span>`
+           
+                    //Append all properties of the particular question to this questionHouse div
+                       questionHouse.append(questionDiv)
+                       optionHouse.append(optionADiv)
+                       optionHouse.append(optionBDiv)
+                       optionHouse.append(optionCDiv)
+                       optionHouse.append(optionDDiv)
+                       questionHouse.append(optionHouse)
+                       
+                       //Append the question house div to the questions section of the page
+                       document.querySelector('.questions').append(questionHouse)
+                       
+                       
+                        
+           
+                   }
+                   //Scores is a dictionary that stores a user's score on a particular quiz
+                    scores = {}
+                //  For the choices
+           
+                   document.querySelectorAll("[data-option]").forEach(function(option){
+                       
+                        //On selection of a choice
+                       option.onclick = function(){
+           
+           
+                           //Get the user's choice
+                            choice = this.getAttribute('data-option')
+                            
+                            //Get the right answer to the question number
+                            questionNo = this.getAttribute('data-question')
+                            no = parseInt(questionNo)
+                            //Get the answer to the question Number
+                            answer = questions[no].answer
+           
+                            //Store the score in scores for the question
+                                x = questionNo
+                                //If question has been attempted before
+                                if(x in scores){
+                                    if(x == questionNo){
+           
+                                        //If the answer is correct
+                                        if(choice === answer){
+                                            //store as 1
+                                            scores[x] = 1
+                                        }
+                                        //If answer is incorrect, store score as 0
+                                        else{
+                                            scores[x] = 0
+                                        }
+           
+                                    }
+                                }
+                                //Else if question has not been attempted before
+                                else{
+                                    if(choice === answer){
+                                            //store as 1
+                                            scores[x] = 1
+                                        }
+                                        //If answer is incorrect, store score as 0
+                                        else{
+                                            scores[x] = 0
+                                        }
+                                }
+           
+           
+                                //This is for making the selected choice have a different background color from unselected choices
+                                //Get all the options(Usually the last 4.)
+                                //Change their background color to the base color. This step ensures if there was a former choice, it is overriden with the original color
+                                siblings = this.parentElement.children
+                                for(i=siblings.length-1; i > siblings.length-5 ; i--){
+                                    siblings[i].style.backgroundColor = 'navy'
+                                    siblings[i].children[0].style.backgroundColor = 'green'
+                                }
+           
+                                //Get the choice and change its background to whatever color the you want the choice value to be
+                                this.style.backgroundColor ='green';
+                                this.children[0].style.backgroundColor = 'navy';
+           
+                                // Submit button
+                            
+                                        // Keep submit button invisible until at least one question is answered
+                                        // Create a function to get jsons length
+                                        scoresSize = function(scoreDict){
+                                            size=0;
+                                            for(key in scoreDict){
+                                                if(scoreDict.hasOwnProperty(key)){
+                                                    size++
+                                                }
+                                            }
+                                            return size
+                                        }
+           
+                                        // Check for scores Size
+                                        Size = scoresSize(scores)
+           
+                                        //if score size is greater than 0, make submit button visible
+                                        if(Size > 0){
+                                            document.querySelector('#submit').style.display = 'block'
+                                        }
+                                        else{
+                                            document.querySelector('#submit').style.display = 'none'  
+                                        }
+           
+                                        //End of display submit button
+           
+                        } //End of function for clicking each option
+                        
+                        }) //End of each option
+           
+                        // Next implementing a javascript timer 
+           
+                            //Get the duration and time_denotation from context
+                            duration = parseInt('{{ duration }}')
+                            time_denotation = '{{ time_denotation }}'
+           
+                            //If time is set in minutes, set time in minutes
+                            if(time_denotation == 'min'){
+                                time = new Date().setMinutes(new Date().getMinutes() + duration)
+                                
+                            }
+                            //Else if time is set in hours, set time in hours
+                            else if(time_denotation == 'hour'){
+                                time = new Date().setHours(new Date().getHours() + duration)
+                            }
+           
+                            // Call this function every second
+                            x = setInterval(function(){
+                                now = new Date().getTime()
+                                time_left = time - now
+           
+                                // Time calculations for days, hours, minutes and seconds
+                
+                                var hours = Math.floor((time_left % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                var minutes = Math.floor((time_left % (1000 * 60 * 60)) / (1000 * 60));
+                                var seconds = Math.floor((time_left % (1000 * 60)) / 1000);
+           
+                                // Display the result in the element with id="time"
+                                document.getElementById("time").innerHTML =`Time left: ${hours}h ${minutes}m ${seconds}s`;
+           
+                                //if time left is 2 minutes or less change time color to red
+                                if(time_left < (2*60*1000)){
+                                    document.getElementById("time").style.color = 'rgb(242, 106, 106)';
+                                }
+                                if(time_left < 0){
+                                    //Stop the interval from running
+                                    clearInterval(x);
+           
+                                    // lick the submit button
+                                    document.getElementById("time").innerHTML = "EXPIRED";
+                                    document.querySelector('#submit').click()
+                                }
+                            }, 1000) 
+                            //End of the timer function
+           
+           
+                            //On click of submit button, populate the value of score in html to be total
+                            //The html form (not javascript) will be responsible for submitting this form, along with some other data to python
+                            document.querySelector('#submit').onclick = () => {
+                                //This solves for the total score
+                                        total = 0
+                                        
+                                        for(x in scores){
+                                            score = scores[x]
+                                            total += score
+                                            //Gets the length of the json. Necessary for calculating percentage
+                                        
+                                        }
+                                        //Gets the length of the json. Necessary for calculating percentage
+                                        length = questions.length
+           
+                                        // Converts score to percentage
+                                        score  = Math.floor((total/length) * 100)
+
+
+           
+                                        //Give html element ('score') a value of total
+                                        document.getElementsByName('score')[0].value = score.toString()          
+
+                                        // VERSION 2 :- This submits the result along with the date taken
+                                        date = new Date()
+                                        year = date.getFullYear()
+                                        month = date.getMonth() + 1
+                                        day = date.getDate()
+                                        document.getElementsByName('year')[0].value = year
+                                        document.getElementsByName('month')[0].value = month
+                                        document.getElementsByName('day')[0].value = day
+
+
+                            }
+           
+                        
+               } 
+               //End of if questions
+            })
+                
+            
+        </script>
+    </head>
+
+    <body>
+ 
+        <!--Include the navigation points and their url references here-->
+        <nav id='nav'>
+            <p class='nav_home'>Dashboard  </p>
+            <div id='nav_house'>
+                {% if related_quizzes %}
+                <div>
+                    <!-- This is where the related quizzes are passed in-->
+                    <h4> Related Quizzes</h4>
+                    <br>
+                    <p><a href='{% url "home" %}'>Home</a></p>
+
+                    <!--Changed in version 3.2 redirects to quiz instructions instead of quiz proper-->
+                    {% for related_quiz in related_quizzes %}
+                        <p>
+                        <a href='{% url "quiz_instructions"  related_quiz %}'>   
+                            Quiz for {{ related_quiz }}
+                        </a>
+                        </p>
+                    {% endfor %}
+                
+
+                </div>
+                {% endif %}
+                <div>
+                    <h4>Header 1</h4>
+                    <br>
+                    <a href='#'><p class='active'>Exams</p></a>
+                    <p><a href='#'>CASOTs Link 2</a></p>
+                </div> 
+
+                <div>
+                    <h4>Header 2</h4>
+                    <br>
+                    <p><a href='#'>CASOTs Link 3</a></p>
+                    <p><a href='#'>CASOTs Link 4</a></p>
+                    <p><a href='#'>CASOTs Link 5</a></p>
+                    <p><a href='#'>CASOTs Link 6</a></p>
+                </div> 
+
+                <div>
+                    <h4>Header 3</h4>
+                    <br>
+                    <p><a href='#'>CASOTs Link 7</a></p>
+                    
+                </div> 
+            </div>
+        </nav>
+        <div id='house'>
+            <br>
+            <div style='text-align: center;'>{{ course }}</div>
+            <br>
+            <div class='questions'>
+
+            </div>
+
+            <form method='POST' action='{% url "quiz_performance" %}' id='submit_form'>
+                {% csrf_token %}
+                <input type='hidden' name='course'  value='{{ course }}'>
+                <input type='hidden' name='user'  value='testUser4'>
+                <input type='hidden' name='score'>
+
+                <!--VERSION TWO: include a hidden date input that will be populated on submission-->
+                <input type='hidden' name='day'>
+                <input type='hidden' name='month'>
+                <input type='hidden' name='year'>
+    
+             <button id='submit'>Submit</button>
+        </form>
+        <div id='time'></div>
+        </div>
+        
+    </body>
+</html>

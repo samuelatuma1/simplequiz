@@ -1,0 +1,264 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+        <title>Quiz Performance</title>
+
+        <style>
+            *{
+                margin: 0px;
+            }
+            body{
+                font-family: Helvetica, sans-serif, Arial;
+                display: flex;
+                flex-wrap: wrap;
+            }
+            #score_container{
+                background-color: white;
+                border: 1px solid rgb(239, 236, 236);
+                padding: 20px;
+                box-shadow: 2px 2px 2px 2px rgb(228, 226, 226);
+                display: flex;
+                flex-wrap: wrap;
+                width: 90%;
+                
+            }
+            #score{
+                width: 90%;
+                padding-top: 20px;
+                padding-bottom: 20px;
+                border-radius: 5px;
+                background-color: white;
+                text-align: center;
+                font-size: 2em;
+                margin: auto;
+                
+            }
+            
+
+            #user_course{
+                width: 100%;
+                margin: auto;
+                display: flex;
+                color: rgb(255, 238, 238);
+                flex-wrap: wrap;
+                justify-content: center;
+                
+            }
+            #user, #course{
+                width: 40%;
+                text-align: center;
+                margin: 10px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                border-radius: 8px;
+
+            }
+            #user{
+                background-color: rgb(0, 96, 0);
+            }
+            #course{
+                background-color: brown;
+            }
+
+            /*VERSION 2 ADDITIONS*/
+
+            
+
+            #history{
+                border: 1px solid rgb(230, 229, 229);
+                border-radius: 12px;
+                margin-top: 12px;
+                justify-content: center;
+                align-items: center;
+                padding: 12px;
+            }
+
+            .summary{
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                padding-top: 15px;
+                padding-bottom: 15px;
+
+                border: 1px solid rgb(240, 237, 237);
+                border-radius: 5px;
+                margin-top: 5px;
+                cursor: pointer;
+            }
+
+            .summary .short{
+                width: 40%;
+                text-align: center;
+                font-size: large;
+            }
+            .main_body{
+                width: 101%;
+                margin-top: 15px;
+                justify-content: center;
+            }
+
+            @media (min-width: 799px){
+                .main_body{
+                    width:60%;
+                    margin-left: 10px;
+                }
+            }
+
+        </style>
+
+        <!-- Styling for the quiz navigation-->
+        <link rel='stylesheet' href='{% static "quizTest/quiz_nav.css" %}'>
+
+        <!--JavaScript to make navigation more responsible-->
+        <script src='{% static "quizTest/quiz_nav.js" %}'></script>
+
+    </head>
+
+    <body>
+         <!--Include the navigation points and their url references here-->
+         <nav id='nav'>
+            <p class='nav_home'>Dashboard  </p>
+            <div id='nav_house'>
+                <div>
+                    <p><a href='{% url "home" %}'>Home</a></p>
+                </div>
+                {% if related_quizzes %}
+                <div>
+                    <!-- This is where the related quizzes are passed in-->
+                    <h4> Other courses you can check</h4>
+                    <br>
+
+                    {% for related_quiz in related_quizzes %}
+                        <p><a href='{% url "leadership_board" related_quiz %}'>{{ related_quiz }}</a></p>
+                    {% endfor %}
+                
+
+                </div>
+                {% endif %}
+                
+                <div>
+                    <h4>Header 1</h4>
+                    <br>
+                    <a href='#'><p>Exams</p></a>
+                    <p><a href='#'>casots Link 2</a></p>
+                    <p  class='active'>Performance</p>
+                </div> 
+
+                <div>
+                    <h4>Header 2</h4>
+                    <br>
+                    <p><a href='#'>casos Link 3</a></p>
+                    <p><a href='#'>casots Link 4</a></p>
+                    <p><a href='#'>casots Link 5</a></p>
+                    <p><a href='#'>casots Link 6</a></p>
+                </div> 
+
+                <div>
+                    <h4>Header 3</h4>
+                    <br>
+                    <p><a href='#'>casots Link 7</a></p>
+                    
+                </div> 
+            </div>
+        </nav>
+
+        <br>
+        <div class='main_body'>
+        <div id='score_container'>
+
+                <div id='dateholder'>
+                    {% if submission_date %}
+                        {{ submission_date }}
+                    {% endif %}
+                </div>
+
+                <div id='score'>
+                    {% if score %}
+                   <p>Your Score: {{ score }}%</p> 
+                        
+                    {% endif %}
+                </div>
+            
+
+            <div id='user_course'>
+                <div id='user'>
+                   
+                </div>
+
+                <div id='course'>
+                    {% if course %}
+                        {{ course }}
+                    {% endif %}
+                </div>
+            
+
+            
+        
+        </div>
+
+           <br>
+        </div>
+
+        <div id='history'>
+            <p style='text-align: center;'><strong>User ranking for {{user_performances.0.course }}</strong> </p>
+            {% if user_performances %}
+
+            {% for performance in user_performances %}
+                <div class='summary' data-score='{{ performance.score }}' data-course='{{ performance.course }}' data-date='{{ performance.date }}' data-user='{{ performance.user }}'>
+                    <p class='short'>{{ performance.course }}</p>
+                    <p class='short'>{{ performance.date }}</p>
+                </div>
+            {% endfor %}
+            
+            {% else %}
+                <div class='summary'>
+                    <p><strong>No History yet</strong></p>
+                </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            //What we want to achieve with the javascript is, on click of a previous performance, it replaces the content of the displayed performance
+            //Query for all performances
+            History = document.querySelectorAll('.summary')
+            History.forEach(function(summary){
+
+                //On click of each performance(summary)
+                summary.onclick = function(){
+                    //Change all other summaries background color to white
+                    History.forEach(function(changeColor){
+                        changeColor.style.backgroundColor = 'white';
+                    })
+                    //While you keep the current summary's color at light blue for example
+                    this.style.backgroundColor = 'rgb(221, 221, 250)';
+
+                    // This section attempts to replace the displayed performance
+                        //Get the data you want to pass in
+                        displayScore = this.getAttribute('data-score')
+                        displayCourse = this.getAttribute('data-course')
+                        displayDate = this.getAttribute('data-date')
+                        displayUser = this.getAttribute('data-user')
+
+                        //Replace the current displayed performance with the new data
+                        document.querySelector('#score').innerHTML = `<p>${displayUser}'s Score: ${displayScore}%</p>`
+                        document.querySelector('#user_course #course').innerHTML = `${displayCourse}`
+                        document.querySelector('#user_course #user').innerHTML = `${displayUser}`
+                        document.querySelector('#score_container #dateholder').innerHTML = `Date Taken: ${displayDate}`
+
+           
+
+
+                    
+                }
+            })
+        })
+    </script>
+    </body>
+</html>

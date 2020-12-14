@@ -1,0 +1,81 @@
+ /* expand will animate the nav bar */
+ @keyframes expand{
+    0%{
+        line-height: 0%;
+        opacity: 0;
+    }
+
+    100%{
+        line-height: 100%;
+        opacity: 1;
+    }
+
+}
+
+@keyframes contract{
+    0%{
+        line-height: 100%;
+        opacity: 1
+    }
+
+    100%{
+        line-height: 0%;
+        opacity: 0;
+    }
+
+}
+
+#nav{
+    background-color: rgb(67, 67, 121);
+    color: rgb(226, 229, 232);
+    width: 35%;
+    border-bottom-right-radius: 12px;
+}
+#nav a{
+    text-decoration: none;
+    color: rgb(226, 229, 232);
+}
+#nav p{
+    margin-bottom: 10px;
+}
+#nav_house div{
+    padding: 20px;
+    border-top: 2px solid grey;
+}
+
+#nav_house .active{
+    color: rgb(203, 99, 203);
+    padding-top: 5px;
+    font-weight: bolder;
+    padding-bottom: 10px;
+    border-right: 5px solid rgb(203, 99, 203);
+}
+.nav_home{
+    
+    display: none;
+    
+
+}
+
+
+@media (max-width: 800px){
+    #nav .nav_home{
+        margin: 0px;
+        padding: 20px;
+        display: block;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    #nav #nav_house{
+        display: none;
+       
+    }
+    
+    #nav{
+        width: 100%;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+        
+    }
+}

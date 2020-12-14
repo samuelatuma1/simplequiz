@@ -1,0 +1,187 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+        <title>Home</title>
+        <style>
+            *{
+                margin: 0px;
+            }
+            body{
+                font-family: Arial, Helvetica, sans-serif;
+                display: flex;
+                flex-wrap: wrap;
+            }
+            a{
+                text-decoration: none;
+                color: rgb(48, 44, 44);
+                font-size: large;
+            
+            }
+            
+
+            #categories{
+                display: flex;
+                flex-wrap: wrap;
+                width: 60%;
+                max-height: 400px;
+            }
+
+            .category{
+                border: 2px solid rgb(223, 221, 221);
+                margin: 10px;
+                justify-content: center;
+                align-items: center;
+                width: 45%;
+                border-radius: 10px;
+                background-color: white;
+                cursor: pointer;
+                
+            }
+
+
+            #quiz_instruction{
+                background-color: navy;
+                color: aliceblue;
+            }
+            .category_name{
+                padding-top: 18px;
+                padding-bottom: 18px;
+                border-top: 1px solid rgb(232, 228, 228);
+                justify-content: center;
+                margin: auto;
+                
+                text-align: center;
+                
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+            }
+
+            .category_image{
+                width: 100%;
+                display: block;
+                margin: auto;
+                margin-bottom: 0px;
+                justify-content: center;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                
+            }
+            .category_image img{
+                width: 100%;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+            }
+            #toQuiz{
+                border: 1px solid rgb(166, 166, 216);
+                border-radius: 5px;
+                background-color: rgb(0, 0, 70);
+                padding: 5px;
+                color: aliceblue;
+                margin: auto;
+                
+            }
+            
+
+            @media (max-width: 800px){
+                body{
+                    background-color: white;
+                }
+                .category_image{
+                width: 100%;
+                }
+                .category_name{
+                    width: 100%;
+                }
+
+                .category{
+                    
+                    width: 99%;
+                    margin-bottom: 10px;
+                   
+                }
+                #categories{
+                    width: 100%;
+                }
+               
+            }
+        </style>
+        <!-- Styling for the quiz navigation-->
+        <link rel='stylesheet' href='{% static "quizTest/quiz_nav.css" %}'>
+
+        <!--JavaScript to make navigation more responsible-->
+        <script src='{% static "quizTest/quiz_nav.js" %}'></script>
+    </head>
+
+    <body>
+
+        <!--Include the navigation points and their url references here-->
+        <nav id='nav'>
+            <p class='nav_home'>Dashboard  </p>
+            <div id='nav_house'>
+                <div>
+                    <h4>Header 1</h4>
+                    <br>
+                    <a href='#'><p>Exams</p></a>
+                    <p><a href='{% url "home" %}'>Home</a></p>
+                    <p  class='active'>{% if quizName %}{{ quizName.0.course.name }} Materials{% endif %}</p>
+                </div> 
+
+                <div>
+                    <h4>Header 2</h4>
+                    <br>
+                    <p><a href='#'>casos Link 3</a></p>
+                    <p><a href='#'>casots Link 4</a></p>
+                    <p><a href='#'>casots Link 5</a></p>
+                    <p><a href='#'>casots Link 6</a></p>
+                </div> 
+
+                <div>
+                    <h4>Header 3</h4>
+                    <br>
+                    <p><a href='#'>casots Link 7</a></p>
+                    
+                </div> 
+            </div>
+        </nav>
+        <div id='categories'>
+        {% if quizName %}
+            
+                {% for quiz in quizName %}
+                    <div class='category' id='quiz_instruction'>
+                          
+                            <div class='category_name'>
+                                <h2>Quiz instructions for {{ quiz.course.name }}</h2>
+                                <br>
+                                <p>{{ quiz.description }}</p>
+                                <br>
+
+                                <p>Quiz duration: {{ quiz.duration }} {{ quiz.time_denotation }}</p>
+                                <br>
+
+                                <p>Users have a total of 2 attempts within a period of 6 months for each course</p>
+
+                                <br>
+                                <!--<button id='toQuiz'><a href='{% url "index" quiz.course.name %}'> Click to start </a></button>-->
+                            </div>
+                            <form action='{% url "index" quiz.course.name  %}' method='POST'>
+                                {% csrf_token %}
+                                <input name='user' value='testUser4' type="hidden">
+                                <button id='toQuiz'>Click to start</button>
+                            </form>
+                        
+                    </div>
+                {% endfor%}
+            
+        {% else %}
+        <div id='category'>
+            <h2>Nothing here yet</h2>
+        </div>
+        {% endif %}
+
+       
+      </div>
+    </body>
+</html>

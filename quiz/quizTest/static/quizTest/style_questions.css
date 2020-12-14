@@ -1,0 +1,110 @@
+*{
+    margin: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+    
+}
+body{
+    background-color: rgb(0, 0, 63);
+    display: flex;
+    flex-wrap: wrap;
+}
+/* styles the entire question section */
+#house{
+    width: 60%;
+   
+    background-color: rgb(0, 0, 63);
+    color: rgb(243, 243, 249);
+}
+
+#submit{
+    display: none;
+}
+
+/* This styles the questions house */
+.questionHouse{
+    margin: auto;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* This styles the question itself */
+.questionDiv{
+    background-color: navy;
+    font-size: large;
+    padding: 15px;
+    border-radius: 10px;
+    width: 100%;
+    margin: 18px;
+    text-align: center;
+}
+
+/* This styles the question number */
+.questionDiv .question_no{
+   
+    font-size: small;
+    width: 100%;
+    color: rgb(19, 196, 19);
+}
+
+
+
+/* This styles the options */
+.optionDiv{
+    background-color: navy;
+    width: 45%;  
+    margin: 8px;
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+}
+.optionHouse{
+    width: 95%;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+/* this styles the options too */
+.optionDiv .option_style{
+    background-color: green;
+    padding: 4px 6px;
+    margin-right: 10px;
+    border-radius: 4px;
+}
+
+/* This styles the submit button */
+#submit{
+    margin: auto;
+    background-color: navy;
+    color: aliceblue;
+    border: 1px solid navy;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/*This styles the time section */
+
+/*  Whent the screen  has a smaller resolution e.g a tablet, work with these styling instead  */
+/* This styles the options */
+@media (max-width: 1500px){
+    
+    .optionDiv{
+    background-color: navy;
+    width: 40%;  
+    margin: 5px;
+    border-radius: 8px;
+    padding: 8px;
+}
+}
+
+/* When screen size is close to the size of a normal phone */
+@media (max-width: 800px){
+    #house{
+    width: 100%;
+}   
+}

@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+        <title>Home</title>
+        <style>
+            *{
+                margin: 0px;
+            }
+            body{
+                font-family: Arial, Helvetica, sans-serif;
+                display: flex;
+                flex-wrap: wrap;
+            }
+            a{
+                text-decoration: none;
+                color: rgb(48, 44, 44);
+                font-size: large;
+            
+            }
+            
+
+            #categories{
+                display: flex;
+                flex-wrap: wrap;
+                width: 60%;
+                max-height: 400px;
+            }
+
+            .category{
+                border: 2px solid rgb(223, 221, 221);
+                margin: 10px;
+                justify-content: center;
+                align-items: center;
+                width: 45%;
+                border-radius: 10px;
+                background-color: white;
+                cursor: pointer;
+                
+            }
+            .category_name{
+                padding-top: 18px;
+                padding-bottom: 18px;
+                border-top: 1px solid rgb(232, 228, 228);
+                justify-content: center;
+                margin: auto;
+                text-align: center;
+                background-color: rgb(239, 239, 250);
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+                font-size: 1.5em;
+            }
+
+            .category_image{
+                width: 100%;
+                display: block;
+                margin: auto;
+                margin-bottom: 0px;
+                justify-content: center;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                
+            }
+            .category_image img{
+                width: 100%;
+            }
+
+            @media (max-width: 800px){
+                body{
+                    background-color: white;
+                }
+                
+                .category_name{
+                    width: 100%;
+                }
+
+                .category{
+                    
+                    width: 99%;
+                    margin: auto;
+                    margin-bottom: 10px;
+                   
+                }
+                #categories{
+                    width: 100%;
+                }
+               
+            }
+        </style>
+        <!-- Styling for the quiz navigation-->
+        <link rel='stylesheet' href='{% static "quizTest/quiz_nav.css" %}'>
+
+        <!--JavaScript to make navigation more responsible-->
+        <script src='{% static "quizTest/quiz_nav.js" %}'></script>
+    </head>
+
+    <body>
+
+        <!--Include the navigation points and their url references here-->
+        <nav id='nav'>
+            <p class='nav_home'>Dashboard  </p>
+            <div id='nav_house'>
+                <div>
+                    <h4>Header 1</h4>
+                    <br>
+                    <a href='#'><p>Exams</p></a>
+                    <p><a href='#'>casots Link 2</a></p>
+                    <p  class='active'>Home Page</p>
+                </div> 
+
+                <div>
+                    <h4>Header 2</h4>
+                    <br>
+                    <p><a href='#'>casos Link 3</a></p>
+                    <p><a href='#'>casots Link 4</a></p>
+                    <p><a href='#'>casots Link 5</a></p>
+                    <p><a href='#'>casots Link 6</a></p>
+                </div> 
+
+                <div>
+                    <h4>Header 3</h4>
+                    <br>
+                    <p><a href='#'>casots Link 7</a></p>
+                    
+                </div> 
+            </div>
+        </nav>
+        
+        {% if categories %}
+            <div id='categories'>
+                
+               
+                {% for category in categories %}
+                    
+                    <div class='category'>
+                        <a href='{% url "course_main" category.name %}'>
+                            {% if category.image.url %}
+                            <div class='category_image'><img src='{{ category.image.url }}' alt='{{ category.name }}'></div>
+                            {% endif %}
+                            <div class='category_name'>{{ category.name }}</div>
+                        </a>
+                    </div>
+                    
+                {% endfor%}
+            </div>
+        {% endif %}
+    </body>
+</html>
